@@ -276,9 +276,29 @@ body{overscroll-behavior:none;-webkit-tap-highlight-color:transparent}
   </div>
 </div>
 <script>
-
+(function(){
+  var K="protrack_boot",flag=null;try{flag=localStorage.getItem(K);}catch(e){}
+  function raw(){try{return JSON.parse(localStorage.getItem("protrack_v1")||"null");}catch(e){return null;}}
+  function done(){try{localStorage.removeItem(K);}catch(e){}location.reload();}
+  window.__ptRescue=function(msg){if(window.__ptShown)return;window.__ptShown=true;window.__ptStop=true;
+    var ph=document.getElementById("phone")||document.body,b='style="display:block;width:100%;margin-top:10px;padding:15px;border-radius:14px;font:600 16px system-ui;border:1px solid #3a3d3c;background:#1c1d1d;color:#f0f0f0"';
+    ph.innerHTML='<div style="padding:56px 20px 20px;color:#f0f0f0;font:15px system-ui;display:flex;flex-direction:column;gap:6px;background:#0e0e0e;min-height:100%"><b style="font-size:22px">ProTrack startet nicht</b><span style="color:#9a9e9d">Deine Trainingsdaten sind noch da.</span>'+(msg?'<code style="color:#9a9e9d;font-size:12px;word-break:break-word">'+String(msg).replace(/[<>&]/g,"")+'</code>':'')+
+      '<button '+b+' id="rs_view">Ansicht und laufendes Training zurücksetzen</button><button '+b+' id="rs_retry">Normal starten</button><button '+b+' id="rs_save">Daten als Datei sichern</button></div>';
+    document.getElementById("rs_retry").onclick=done;
+    document.getElementById("rs_view").onclick=function(){var o=raw();if(o){["sheet","w","prep","wu","rest","pause","edit","imp","sub","sumi","sumfrom","mu","confirm"].forEach(function(k){o[k]=null;});o.screen="heute";o.partners={};o.extra=false;o.tt=null;try{localStorage.setItem("protrack_v1",JSON.stringify(o));}catch(e){}}done();};
+    document.getElementById("rs_save").onclick=function(){var o=raw()||{};if(o.gh)o.gh.token="";var txt=JSON.stringify({app:"protrack",v:1,at:new Date().toISOString(),state:o}),d=new Date(),name="protrack-rettung-"+d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate()+".json",f=null;
+      try{f=new File([txt],name,{type:"application/json"});}catch(e){}
+      if(f&&navigator.canShare&&navigator.canShare({files:[f]})){navigator.share({files:[f]}).catch(function(){});return;}
+      var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([txt],{type:"application/json"}));a.download=name;document.body.appendChild(a);a.click();};};
+  window.addEventListener("error",function(ev){var m=(ev&&ev.message||"Fehler")+(ev&&ev.lineno?" · Zeile "+ev.lineno:"");try{localStorage.setItem("protrack_err",m);}catch(e){}if(!window.__ptBooted)window.__ptRescue(m);});
+  if(flag){var m0=null;try{m0=localStorage.getItem("protrack_err");}catch(e){}window.__ptStop=true;document.addEventListener("DOMContentLoaded",function(){window.__ptRescue(m0||"Der letzte Start ist hängen geblieben.");});}
+  else try{localStorage.setItem(K,String(Date.now()));}catch(e){}
+})();
+</script>
+<script>
 (function(){
 "use strict";
+if(window.__ptStop)return;
 var $=function(s,r){return (r||document).querySelector(s)};
 var fmt=function(n){return String(Math.round(n*10)/10).replace(".",",")};
 var tsd=function(n){return Math.round(n).toLocaleString("de-DE")};
@@ -451,8 +471,8 @@ var prof=function(){var p=S.profiles[S.profile];if(!p)return NOP;if(!p.lists)p.l
 var plan=function(id){for(var i=0;i<S.plans.length;i++)if(S.plans[i].id===id)return S.plans[i];return null};
 var active=function(){return plan(prof().active)};
 var totXP=function(n){return 500*n+50*n*(n-1)};
-function lvl(){var l=0;while(totXP(l+1)<=S.xp)l++;return {l:l,rank:RANKS[Math.min(Math.floor(l/10),10)],cur:S.xp-totXP(l),need:totXP(l+1)-totXP(l)};}
-function addXP(n){var b=lvl();S.xp+=n;var a=lvl();if(a.rank!==b.rank)S.toast="Rang-Aufstieg: "+a.rank+" · Level "+a.l;else if(a.l!==b.l)S.toast="Level "+a.l+" erreicht";}
+function lvl(){var x=+S.xp;if(!(x>=0)||!isFinite(x))x=S.xp=0;var l=0;while(l<500&&totXP(l+1)<=x)l++;return {l:l,rank:RANKS[Math.min(Math.floor(l/10),10)],cur:x-totXP(l),need:totXP(l+1)-totXP(l)};}
+function addXP(n){var b=lvl();S.xp=(+S.xp||0)+(+n||0);var a=lvl();if(a.rank!==b.rank)S.toast="Rang-Aufstieg: "+a.rank+" · Level "+a.l;else if(a.l!==b.l)S.toast="Level "+a.l+" erreicht";}
 
 /* ---------- Tutorial ---------- */
 var STEPS=[
@@ -775,8 +795,8 @@ function exBest(x){var b=null;(x.s||[]).forEach(function(q){var e=e1rm(load(x.as
 function mondayOf(d){d=new Date(d);d.setHours(0,0,0,0);d.setDate(d.getDate()-(d.getDay()+6)%7);return d;}
 function isoWeek(d){d=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));var dn=d.getUTCDay()||7;d.setUTCDate(d.getUTCDate()+4-dn);var y=new Date(Date.UTC(d.getUTCFullYear(),0,1));return Math.ceil(((d-y)/864e5+1)/7);}
 function wkLabel(a){var b=new Date(a);b.setDate(b.getDate()+6);var f=function(d){return d.toLocaleDateString("de-DE",{day:"numeric",month:"short"})};return "KW "+isoWeek(a)+" · "+f(a)+" – "+f(b);}
-function weeksSet(){var o={};prof().log.forEach(function(t){o[dkey(mondayOf(t.d))]=1;});return o;}
-function wkStreakAt(dt,lenient){var has=weeksSet(),d=mondayOf(dt),n=0;if(lenient&&!has[dkey(d)])d.setDate(d.getDate()-7);while(has[dkey(d)]){n++;d.setDate(d.getDate()-7);}return n;}
+function weeksSet(){var o={};(prof().log||[]).forEach(function(t){var m=mondayOf(t.d);if(!isNaN(m.getTime()))o[dkey(m)]=1;});return o;}
+function wkStreakAt(dt,lenient){var has=weeksSet(),d=mondayOf(dt),n=0;if(isNaN(d.getTime()))return 0;if(lenient&&!has[dkey(d)])d.setDate(d.getDate()-7);while(n<1000&&has[dkey(d)]){n++;d.setDate(d.getDate()-7);}return n;}
 function bestStreak(){var ks=Object.keys(weeksSet()).sort(),b=0,c=0,prev=null;ks.forEach(function(k){var d=new Date(k+"T00:00:00");if(prev&&Math.round((d-prev)/6048e5)===1)c++;else c=1;b=Math.max(b,c);prev=d;});return b;}
 function weekAgg(off){var a=mondayOf(new Date());a.setDate(a.getDate()-7*off);var b=new Date(a);b.setDate(b.getDate()+7);
   var mu={},tot={n:0,min:0,sets:0,vol:0};
@@ -1077,7 +1097,7 @@ function sheet(){
 
 /* ---------- Render und Takt ---------- */
 function lf(o){return Math.ceil((o.end-now())/1000);}
-function save(){if(NOSAVE)return;try{localStorage.setItem("protrack_v1",JSON.stringify(S));}catch(e){}}
+function save(){if(NOSAVE||window.__ptStop)return;try{localStorage.setItem("protrack_v1",JSON.stringify(S));}catch(e){}}
 function render(){
   if(S.rest)S.rest.left=lf(S.rest);if(S.wu)S.wu.left=lf(S.wu);save();
   var ph=$("#phone"),osh=$(".sheet",ph),shk=osh?osh.scrollTop:0,old=$(".scr",ph),key=S.screen+(S.sub||""),keep=old&&old.dataset.s===key?old.scrollTop:0;
@@ -1365,10 +1385,11 @@ Object.keys(S.profiles).forEach(function(pk){var P=S.profiles[pk];if(!P.last)P.l
 S.paints=S.paints.filter(function(k){return TYPES[k]});if(S.screen==="planex"&&!plan(S.pxid))S.screen="plan";if(S.profile&&!S.profiles[S.profile])S.profile=Object.keys(S.profiles)[0]||null;
 S.sheet=null;S.step=0;S.edit=null;S.confirm=null;S.emo=null;if(S.set.summap==null)S.set.summap=true;if(S.screen==="edit")S.screen="plan";
 S.gh=Object.assign({token:"",backup:"",sync:"",name:"",ps:false,pb:false,err:"",msg:""},S.gh||{});S.gh.msg="";if(!S.partners)S.partners={};if(!S.cex)S.cex=[];if(!S.m8){S.m8=1;S.plans.forEach(function(p){if(p.wu)p.wu.on=false;});if(S.gwu)S.gwu.on=false;S.set.summary=true;}S.reord=false;S.cxout=null;if(S.screen==="sum"&&!(S.profiles[S.profile]&&prof().log[S.sumi]))S.screen="heute";if(S.wu&&!S.wu.total)S.wu=null;if(S.w&&S.screen!=="workout"&&!S.pause)S.w=null;if(!S.w){S.pause=null;S.wu=null;S.rest=null;}S.imp=null;S.popen=null;if(S.set.ghauto==null)S.set.ghauto=true;applyTheme();if(window.matchMedia)try{matchMedia("(prefers-color-scheme: light)").addEventListener("change",applyTheme);}catch(e){}
+(function(){var x=0;Object.keys(S.profiles||{}).forEach(function(k){(S.profiles[k].log||[]).forEach(function(t){x+=150+100*((t&&t.pr)||[]).length;});});var c=+S.xp;if(!(c>=0)||!isFinite(c)||c>1e8)c=0;S.xp=Math.max(c,x);})();
 var td=new Date().toDateString();if(S.day!==td){S.day=td;S.done=false;S.weighed=false;S.meals=[];S.toast=null;if(!S.w){S.tt=null;S.prep=null;S.extra=false;}if(S.screen!=="workout")S.screen="heute";}
 if(S.screen==="workout"&&!S.w)S.screen="heute";if(S.screen==="prep"&&!S.prep)S.screen="heute";
 document.body.insertAdjacentHTML("beforeend",'<datalist id="exdl">'+LIB.filter(function(e){return e.m!=="Aufwärmen"}).map(function(e){return '<option value="'+e.n+'">'}).join("")+'</datalist>');
-renderSurvey();render();
+renderSurvey();render();window.__ptBooted=true;try{localStorage.removeItem("protrack_boot");localStorage.removeItem("protrack_err");}catch(e){}
 wake();window.addEventListener("online",wake);document.addEventListener("visibilitychange",function(){if(!document.hidden)wake();});
 })();
 
