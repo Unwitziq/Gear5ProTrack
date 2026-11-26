@@ -290,7 +290,7 @@ body{overscroll-behavior:none;-webkit-tap-highlight-color:transparent}
       try{f=new File([txt],name,{type:"application/json"});}catch(e){}
       if(f&&navigator.canShare&&navigator.canShare({files:[f]})){navigator.share({files:[f]}).catch(function(){});return;}
       var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([txt],{type:"application/json"}));a.download=name;document.body.appendChild(a);a.click();};};
-  window.addEventListener("error",function(ev){var m=(ev&&ev.message||"Fehler")+(ev&&ev.lineno?" · Zeile "+ev.lineno:"");try{localStorage.setItem("protrack_err",m);}catch(e){}if(!window.__ptBooted)window.__ptRescue(m);});
+  window.addEventListener("error",function(ev){var m=(ev&&ev.message||"Fehler")+(ev&&ev.lineno?" · Zeile "+ev.lineno+":"+(ev.colno||0):"")+" · iOS "+((navigator.userAgent.match(/OS (\d+[_\d]*)/)||[])[1]||"?");try{localStorage.setItem("protrack_diag",JSON.stringify({m:m,st:String(ev&&ev.error&&ev.error.stack||"").split("\n").slice(0,6).join(" | "),w:"start",at:new Date().toISOString(),ua:navigator.userAgent}));}catch(e){}try{localStorage.setItem("protrack_err",m);}catch(e){}if(!window.__ptBooted)window.__ptRescue(m);});
   if(flag){var m0=null;try{m0=localStorage.getItem("protrack_err");}catch(e){}window.__ptStop=true;document.addEventListener("DOMContentLoaded",function(){window.__ptRescue(m0||"Der letzte Start ist hängen geblieben.");});}
   else try{localStorage.setItem(K,String(Date.now()));}catch(e){}
 })();
@@ -504,7 +504,7 @@ var STEPS=[
  {t:"Geschafft",d:"Fülle den Fragebogen aus und kopiere deine Antworten in den Chat.",w:"Unter „Mehr“ findest du noch Übungsbibliothek, Einstellungen und Sicherung zum freien Ausprobieren."}
 ];
 function renderCoach(){
-  var s=STEPS[S.step],last=S.step===STEPS.length-1,dots="";
+  var s=STEPS[S.step];if(!s||!$("#coach"))return;var last=S.step===STEPS.length-1,dots="";
   for(var i=0;i<STEPS.length;i++)dots+='<i class="'+(i<=S.step?"on":"")+'"></i>';
   $("#coach").innerHTML='<span class="stepno">Schritt '+(S.step+1)+' von '+STEPS.length+'</span><h2>'+s.t+'</h2><p class="do">'+s.d+'</p>'+(s.w?'<p class="why">'+s.w+'</p>':'')+
    '<div class="row"><div class="dots">'+dots+'</div>'+(S.step>0?'<button class="btn ghost small" data-coach="back">Zurück</button>':'')+
@@ -513,7 +513,7 @@ function renderCoach(){
 }
 function markTarget(){
   var old=document.querySelectorAll(".tut");for(var i=0;i<old.length;i++)old[i].classList.remove("tut");
-  var s=STEPS[S.step];if(!s.sel)return;var el=$(s.sel,$("#phone"));
+  var s=STEPS[S.step];if(!s||!s.sel)return;var el=$(s.sel,$("#phone"));
   if(el){el.classList.add("tut");if(el.scrollIntoView&&!el.closest(".tabs"))el.scrollIntoView({block:"nearest"});}
 }
 
@@ -1132,7 +1132,7 @@ function scrExtra(){var L=prof().log.filter(function(t){return t.x}).reverse(),h
   return h+'</div>';}
 function scrMehr(){
   if(S.sub==="game")return scrGame();if(S.sub==="lib")return scrLib();if(S.sub==="set")return scrSet();if(S.sub==="backup")return scrBackup();if(S.sub==="nt")return scrNt();if(S.sub==="link")return scrLink();if(S.sub==="extra")return scrExtra();if(S.sub==="cex")return scrCex();
-  var h='<div class="h">Mehr</div><div class="list">';
+  var h='<div class="h">Mehr</div>'+diagCard()+'<div class="list">';
   [["game","Challenges","Level, Punkte, eigene Ziele"],["lib","Übungsbibliothek","Mit Strichfigur und Merksätzen"],["extra","Extra-Trainings","Verlauf außerhalb vom Plan"],["cex","Eigene Übungen","Ablauf, Körpergewicht"],["set","Einstellungen","Wiegen, Farbe, Hell/Dunkel"],["nt","Training nachtragen","Aus einer Notiz"],["backup","Sicherung","Datei oder GitHub"],["link","Verknüpfung","GitHub-Zugang, Partner"]].forEach(function(x){h+='<button data-sub="'+x[0]+'"><span><b>'+x[1]+'</b><br><span class="sub">'+x[2]+'</span></span><span class="sub">›</span></button>';});
   return h+'</div>';
 }
@@ -1160,19 +1160,30 @@ function sheet(){
 
 /* ---------- Render und Takt ---------- */
 function lf(o){return Math.ceil((o.end-now())/1000);}
+var BUILD="2026-11-26 19:22";
+function ptIOS(){return ((navigator.userAgent.match(/OS (\d+[_\d]*)/)||[])[1]||"").replace(/_/g,".");}
+function ptDiag(e,where){try{localStorage.setItem("protrack_diag",JSON.stringify({m:String(e&&e.message||e),st:String(e&&e.stack||"").split("\n").slice(0,6).join(" | "),w:where||"",s:S.screen+"/"+(S.sub||"")+(S.sheet?"/"+S.sheet.t:""),b:BUILD,ua:navigator.userAgent,at:new Date().toISOString()}));}catch(x){}}
+function ptDiagGet(){try{return JSON.parse(localStorage.getItem("protrack_diag")||"null");}catch(e){return null;}}
+function ptDiagText(){var o=ptDiagGet();if(!o)return "";return "ProTrack Fehlerbericht\nVersion "+(o.b||BUILD)+" · iOS "+(ptIOS()||"?")+"\nZeit "+o.at+"\nWo "+(o.w||"")+" · "+(o.s||"")+"\n"+o.m+"\n"+(o.st||"")+"\n"+(o.ua||"");}
+function errCard(e){return '<div class="h">Fehler</div><div class="card"><b>Diese Ansicht konnte nicht geladen werden</b><code style="color:var(--muted);font-size:12px;word-break:break-word">'+esc(String(e&&e.message||e))+'</code><button class="cta" data-act="diagreset">Zur Startseite</button><button class="cta line" data-act="diagcopy">Fehlerbericht kopieren</button></div>';}
+function diagCard(){var o=ptDiagGet();if(!o)return "";return '<div class="card"><div class="between"><b>Letzter Fehler</b><span class="sub">'+esc(hm(o.at))+'</span></div><code style="color:var(--muted);font-size:12px;word-break:break-word">'+esc(o.m)+'</code><button class="cta line" data-act="diagcopy">Fehlerbericht kopieren</button><button class="linkbtn" data-act="diagclear">Entfernen</button></div>';}
 function save(){if(NOSAVE||window.__ptStop)return;try{localStorage.setItem("protrack_v1",JSON.stringify(S));}catch(e){}}
 function render(){
   if(S.rest)S.rest.left=lf(S.rest);if(S.wu)S.wu.left=lf(S.wu);save();
   var ph=$("#phone"),osh=$(".sheet",ph),shk=osh?osh.scrollTop:0,old=$(".scr",ph),key=S.screen+(S.sub||""),keep=old&&old.dataset.s===key?old.scrollTop:0;
   var full=S.screen==="workout"||S.screen==="prep"||S.screen==="edit"||S.screen==="planex"||S.screen==="sum";
-  var body={heute:scrHeute,prep:scrPrep,workout:scrWorkout,plan:scrPlan,planex:scrPlanEx,edit:scrEdit,prog:scrProg,partner:scrPartner,mehr:scrMehr,sum:scrSum}[S.screen]();
-  var h='<div class="scr'+(full?" notab":"")+'" data-s="'+key+'">'+body+'</div>'+(full?"":tabs());
+  try{localStorage.setItem("protrack_rend",key+(S.sheet?"/"+S.sheet.t:""));}catch(e){}
+  var body,fn={heute:scrHeute,prep:scrPrep,workout:scrWorkout,plan:scrPlan,planex:scrPlanEx,edit:scrEdit,prog:scrProg,partner:scrPartner,mehr:scrMehr,sum:scrSum}[S.screen];
+  try{if(!fn)throw new Error("Unbekannte Ansicht: "+S.screen);body=fn();}catch(e){ptDiag(e,"ansicht");body=errCard(e);full=false;}
+  var tb="";if(!full)try{tb=tabs();}catch(e){ptDiag(e,"tabs");}
+  var h='<div class="scr'+(full?" notab":"")+'" data-s="'+key+'">'+body+'</div>'+tb;
   var inW=S.screen==="workout";
-  if(inW&&S.pause)h+='<div class="layer">'+layerPause()+'</div>';
+  try{if(inW&&S.pause)h+='<div class="layer">'+layerPause()+'</div>';
   else if(inW&&S.wu)h+='<div class="layer">'+layerWarm()+'</div>';
-  else if(inW&&S.rest)h+='<div class="layer">'+layerRest()+'</div>';
-  if(S.sheet)h+=sheet();
-  ph.innerHTML=h;$(".scr",ph).scrollTop=keep;var nsh=$(".sheet",ph);if(nsh&&shk)nsh.scrollTop=shk;renderCoach();markTarget();tickClock();
+  else if(inW&&S.rest)h+='<div class="layer">'+layerRest()+'</div>';}catch(e){ptDiag(e,"ebene");}
+  if(S.sheet)try{h+=sheet();}catch(e){ptDiag(e,"blatt");S.sheet=null;S.toast="Fehler abgefangen";}
+  ph.innerHTML=h;try{localStorage.removeItem("protrack_rend");}catch(e){}
+  try{$(".scr",ph).scrollTop=keep;var nsh=$(".sheet",ph);if(nsh&&shk)nsh.scrollTop=shk;renderCoach();markTarget();tickClock();}catch(e){}
 }
 function tickClock(){var c=$("#clock");if(c)c.textContent=mmss((now()-S.started)/1000);}
 setInterval(tickClock,1000);
@@ -1224,6 +1235,9 @@ function act(el){
   else if(a==="ntopt"){S.nt.prev[i].oi=j;}
   else if(a==="ntex"){var nx0=S.nt.prev[i].ex[j];nx0.ci=(nx0.ci+1)%nx0.cand.length;var nt0=S.nt.prev[i],ol0=nt0.opts[nt0.oi];nt0.opts=ntOpts(nt0);var k0=0;nt0.opts.forEach(function(o,q){if(o.typ===ol0.typ&&o.x===ol0.x&&o.day===ol0.day)k0=q;});nt0.oi=k0;}
   else if(a==="ntadd"){ntAdd();}
+  else if(a==="diagreset"){S.sheet=null;S.sub=null;S.edit=null;S.screen="heute";S.toast=null;}
+  else if(a==="diagclear"){try{localStorage.removeItem("protrack_diag");}catch(e){}}
+  else if(a==="diagcopy"){var dt=ptDiagText();S.toast="Fehlerbericht kopiert";try{navigator.clipboard.writeText(dt).catch(function(){prompt("Fehlerbericht",dt);});}catch(e){prompt("Fehlerbericht",dt);}}
   else if(a==="pull"){S.gh.ps=true;flush();pull(true);}
   else if(a==="ghbackup"){if(!ghOn())S.gh.msg="Keine Verbindung";else{S.gh.msg="Sichert …";backupPush().then(function(){S.gh.msg="Gesichert";S.gh.err="";},function(e){S.gh.msg=ghErr(e);}).then(soft);}}
   else if(a==="ghrestore"){if(!ghOn())S.gh.msg="Keine Verbindung";else{S.gh.msg="Lädt …";ghGet(S.gh.backup,"protrack-backup.json").then(function(t){readBackup(t);},function(e){S.gh.msg=e&&e.status===404?"Keine Sicherung im Repo":ghErr(e);}).then(soft);}}
@@ -1345,8 +1359,9 @@ function act(el){
 }
 $("#phone").addEventListener("click",function(ev){
   var el=ev.target.closest("button,[data-mu]");if(!el||el.disabled||!$("#phone").contains(el))return;
-  var s=STEPS[S.step],hit=s.sel&&el.matches(s.sel);
-  act(el);if(hit&&S.step<STEPS.length-1)S.step++;render();
+  var s=STEPS[S.step]||{},hit=false;try{hit=!!s.sel&&el.matches(s.sel);}catch(e){}
+  try{act(el);}catch(e){ptDiag(e,"aktion "+(el.dataset.act||el.dataset.tab||el.dataset.sub||""));S.sheet=null;S.toast="Fehler abgefangen";}
+  if(hit&&S.step<STEPS.length-1)S.step++;render();
 });
 var PAINT=null;
 function paintCell(c){
@@ -1454,6 +1469,8 @@ S.paints=S.paints.filter(function(k){return TYPES[k]});if(S.screen==="planex"&&!
 S.sheet=null;S.step=0;S.edit=null;S.confirm=null;S.emo=null;if(S.set.summap==null)S.set.summap=true;if(S.screen==="edit")S.screen="plan";
 S.gh=Object.assign({token:"",backup:"",sync:"",name:"",ps:false,pb:false,err:"",msg:""},S.gh||{});S.gh.msg="";if(!S.partners)S.partners={};if(!S.cex)S.cex=[];if(!S.m8){S.m8=1;S.plans.forEach(function(p){if(p.wu)p.wu.on=false;});if(S.gwu)S.gwu.on=false;S.set.summary=true;}S.reord=false;S.cxout=null;if(S.screen==="sum"&&!(S.profiles[S.profile]&&prof().log[S.sumi]))S.screen="heute";if(S.wu&&!S.wu.total)S.wu=null;if(S.w&&S.screen!=="workout"&&!S.pause)S.w=null;if(!S.w){S.pause=null;S.wu=null;S.rest=null;}S.imp=null;S.nt=null;S.popen=null;if(S.set.ghauto==null)S.set.ghauto=true;applyTheme();if(window.matchMedia)try{matchMedia("(prefers-color-scheme: light)").addEventListener("change",applyTheme);}catch(e){}
 (function(){var x=0;Object.keys(S.profiles||{}).forEach(function(k){(S.profiles[k].log||[]).forEach(function(t){x+=150+100*((t&&t.pr)||[]).length;});});var c=+S.xp;if(!(c>=0)||!isFinite(c)||c>1e8)c=0;S.xp=Math.max(c,x);})();
+(function(){var r=null;try{r=localStorage.getItem("protrack_rend");localStorage.removeItem("protrack_rend");}catch(e){}
+  if(r){ptDiag(new Error("Ansicht hing beim letzten Mal: "+r),"haenger");S.sheet=null;S.sub=null;S.edit=null;if(S.screen!=="workout")S.screen="heute";else S.rest=null;S.toast="Letzte Ansicht hing · zurückgesetzt";}})();
 var td=new Date().toDateString();if(S.day!==td){S.day=td;S.done=false;S.weighed=false;S.meals=[];S.toast=null;if(!S.w){S.tt=null;S.prep=null;S.extra=false;}if(S.screen!=="workout")S.screen="heute";}
 if(S.screen==="workout"&&!S.w)S.screen="heute";if(S.screen==="prep"&&!S.prep)S.screen="heute";
 document.body.insertAdjacentHTML("beforeend",'<datalist id="exdl">'+LIB.filter(function(e){return e.m!=="Aufwärmen"}).map(function(e){return '<option value="'+e.n+'">'}).join("")+'</datalist>');
