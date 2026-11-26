@@ -563,7 +563,7 @@ function dupDay(p,id){var ix=-1;p.days.forEach(function(x,k){if(x.id===id)ix=k;}
   p.days.forEach(function(x,k){var mm=String(x.n).trim().match(/^(.*?)\s*(\d+)$/);if(mm&&mm[1]===base){mx=Math.max(mx,+mm[2]);last=Math.max(last,k);}});
   if(!p.ex)p.ex={};p.days.splice(last+1,0,{id:nid,n:base+" "+(mx+1),emo:src.emo||""});p.ex[nid]=JSON.parse(JSON.stringify(p.ex[src.id]||[]));return nid;}
 function mkTage(id){return {id:id,kind:"tage",name:"Neuer Plan",color:COLORS[S.plans.length%COLORS.length],len:7,cmode:"zyklus",rest:90,days:[{id:"d"+(S.nextId++),n:"",emo:""}],ex:{},tl:null};}
-function planPrev(p){return isT(p)?'<div class="dchips sm">'+p.days.map(function(x){return '<span class="dchip">'+esc(dLab(x))+'</span>'}).join("")+'</div>':planPrev(p);}
+function planPrev(p){return isT(p)?'<div class="dchips sm">'+p.days.map(function(x){return '<span class="dchip">'+esc(dLab(x))+'</span>'}).join("")+'</div>':stripHTML((p.grid&&p.grid[0])||[]);}
 function chipLab(p,k){if(isT(p)){var x=dayOf(k);return esc(x?dLab(x):k);}return '<i class="dot" style="background:'+TYPES[k].c+'"></i>'+esc(TYPES[k].n);}
 var EMO=["💪","🦵","🔥","🏋️","🍑","🦾","⚡","🎯","🫀","🧱","🏃","🧘"];
 function restTx(e){var n=e.days.length,l=e.len||7;return n>l?"Mehr Trainingstage als Zyklustage":n+(n===1?" Trainingstag · ":" Trainingstage · ")+(l-n)+(l-n===1?" Ruhetag":" Ruhetage");}
