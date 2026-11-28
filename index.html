@@ -406,8 +406,8 @@ var lib=function(id){for(var i=0;i<LIB.length;i++)if(LIB[i].id===id)return LIB[i
  V("ohtri1","ohtri","Überkopf-Trizepsdrücken (einarmig)");V("ohtrib","ohtri","Überkopf-Trizepsdrücken (Stange)");
  var I=function(after,o){LIB.splice(LIB.indexOf(lib(after))+1,0,o);};
  I("legcurl",{id:"legcurll",n:"Beinbeuger liegend",m:"Beine",v:"lie",hot:"beine",ft:0,base:{hd:[30,100],nk:[42,104],sL:[48,105],hp:[96,106],eL:[40,120],hL:[28,118],kL:[128,107],fL:[156,112]},a:{},b:{fL:[121,80]},eq:[["ci","fL",3,-5,5]],pr:[[20,114,122,114],[32,114,32,160],[110,114,110,160]],cues:["Hüfte bleibt auf dem Polster","Fersen Richtung Gesäß ziehen","Langsam ablassen"]});
- I("legpress",{id:"calflp",n:"Wadenheben an der Beinpresse",m:"Beine",v:"lp",hot:"beine",ng:1,base:{kL:[98,112],fL:[124,92]},toe:[117,79],tb:[125,78],a:{},b:{},eq:[["ln","tL",-7,-22,4,2,5]],pr:LPB,cues:["Nur die Fußballen auf der Platte","Knie fast gestreckt, nicht durchdrücken","Ganz hochdrücken, dann tief in die Dehnung"]});
- I("bss",{id:"bsssm",n:"Bulgarian Split Squats (Smith Machine)",m:"Beine",v:"s",hot:"beine",a:{eL:[64,62],hL:[78,46],kL:[94,128],fL:[94,160],kR:[70,132],fR:[46,126]},b:{hd:[80,44],nk:[80,58],sL:[80,64],hp:[80,116],eL:[64,80],hL:[78,64],kL:[106,128],fL:[94,160],kR:[62,146],fR:[46,126]},eq:[["ci","sL",0,-4,6]],pr:[[30,130,58,130],[36,130,36,160],[52,130,52,160],[80,4,80,160],[70,160,90,160]],cues:["Stange liegt auf dem oberen Rücken","Hinterer Fuß auf Bank oder Ablage","Hinteres Knie Richtung Boden"]});
+ I("legpress",{id:"calflp",n:"Wadenheben an der Beinpresse",m:"Beine",v:"lp",hot:"beine",ng:1,base:{kL:[98,112],fL:[124,92]},toe:[110,87],tb:[125,77],a:{},b:{},eq:[["ln","tL",4,1,-9,-17,5]],pr:LPB,cues:["Nur die Fußballen auf der Platte","Knie fast gestreckt, nicht durchdrücken","Ganz hochdrücken, dann tief in die Dehnung"]});
+ I("bss",{id:"bsssm",n:"Bulgarian Split Squats (Smith Machine)",m:"Beine",v:"s",hot:"beine",a:{hd:[82,26],nk:[80,40],sL:[80,46],hp:[78,98],eL:[94,60],hL:[86,44],kL:[96,128],fL:[98,160],kR:[62,130],fR:[38,126]},b:{hd:[82,58],nk:[80,72],sL:[80,78],hp:[76,128],eL:[94,92],hL:[86,76],kL:[110,132],fL:[98,160],kR:[58,156],fR:[38,126]},eq:[["ln","sL",0,-17,0,9,3],["ci","sL",0,-4,6]],pr:[[20,130,48,130],[26,130,26,160],[44,130,44,160],[80,0,80,162],[130,0,130,162]],cues:["Stange liegt auf dem oberen Rücken","Hinterer Fuß auf Bank oder Ablage","Hinteres Knie Richtung Boden"]});
  var LZ=function(id,nm,o,cues){V(id,"latpull",nm,cues);var e=lib(id),k;for(k in o)e[k]=o[k];};
  LZ("latmc","Latziehen (Maschine)",{bar:0,a:{eL:[48,28],hL:[42,6],eR:[112,28],hR:[118,6]},b:{eL:[44,66],hL:[50,44],eR:[116,66],hR:[110,44]},eq:[["ln","hL",-12,4,0,0,5],["ln","hR",0,0,12,4,5]],pr:FSEAT.concat([[22,0,22,160],[138,0,138,160],[22,1,138,1]])},["Brust raus, Schulterblätter nach unten","Griffe bis Kinnhöhe ziehen","Oben ganz strecken"]);
  LZ("latsb","Latzug schulterbreit (Kabelturm)",{a:{eL:[52,30],hL:[60,6],eR:[108,30],hR:[100,6]},b:{eL:[46,68],hL:[60,46],eR:[114,68],hR:[100,46]}},["Hände etwa schulterbreit","Stange zur oberen Brust","Ellbogen nach unten ziehen"]);
@@ -431,6 +431,11 @@ var lib=function(id){for(var i=0;i<LIB.length;i++)if(LIB[i].id===id)return LIB[i
    a:{kR:[86,128],fR:[84,156]},b:{kR:[56,122],fR:[26,112]},
    eq:[["cb",128,156,"fR"],["ci","fR",0,0,4]],pr:[[128,8,128,160]],
    cues:["Manschette unten am Fuß","Am Turm festhalten, Oberkörper leicht vorgebeugt","Bein nach hinten wegstrecken","Po oben fest anspannen"]});
+ I("squat",{id:"squatsm",n:"Kniebeugen (Smith Machine)",m:"Beine",v:"s",hot:"beine",
+   a:{hd:[82,26],nk:[80,40],sL:[80,46],hp:[78,98],eL:[94,60],hL:[86,44],kL:[88,128],fL:[94,160]},
+   b:{hd:[84,60],nk:[80,74],sL:[80,80],hp:[56,124],eL:[94,94],hL:[86,78],kL:[94,124],fL:[94,160]},
+   eq:[["ln","sL",0,-17,0,9,3],["ci","sL",0,-4,6]],pr:[[80,0,80,162],[130,0,130,162]],
+   cues:["Stange auf dem oberen Rücken, Füße etwas vor der Stange","Hüfte nach hinten unten, Knie folgen den Zehen","Mindestens bis Oberschenkel waagerecht","Über die ganze Fußsohle hochdrücken"]});
 })();
 function pose(e,o){
   var p={},b=BASE[e.v],k,all={};for(k in b)p[k]=b[k];if(e.base)for(k in e.base){p[k]=e.base[k];all[k]=1;}for(k in o){p[k]=o[k];all[k]=1;}
@@ -813,8 +818,8 @@ function setAs(n,v){var P=prof();if(!P.asm)P.asm={};P.asm[n]=v?1:0;}
 function bw(){return S.weight>0?S.weight:75;}
 function load(as,w){return as?Math.max(0,bw()-w):w;}
 function setTx(as,q){return (q[0]||as?(as?"−":"")+fmt(q[0])+" kg × ":"")+q[1];}
-var COMP={bsssm:1,squat:1,dead:1,rdl:1,rdlkh:1,legpress:1,hack:1,pendel:1,bss:1,lunge:1,bench:1,benchkh:1,incl:1,inclkh:1,inclsm:1,ohp:1,ohpkh:1,ohpsm:1,row:1,tbar:1,tbarn:1,latpull:1,latcl:1,latnt:1,latsb:1,latmc:1,cabrow:1,highrow:1,pullup:1,pushup:1};
-var LOWER={calflp:1,bsssm:1,squat:1,dead:1,rdl:1,legpress:1,hack:1,pendel:1},KHX={benchkh:1,inclkh:1,curl:1,curlbh:1,ham:1,lat:1,ohpkh:1,rdlkh:1,bss:1,concinc:1};
+var COMP={bsssm:1,squatsm:1,squat:1,dead:1,rdl:1,rdlkh:1,legpress:1,hack:1,pendel:1,bss:1,lunge:1,bench:1,benchkh:1,incl:1,inclkh:1,inclsm:1,ohp:1,ohpkh:1,ohpsm:1,row:1,tbar:1,tbarn:1,latpull:1,latcl:1,latnt:1,latsb:1,latmc:1,cabrow:1,highrow:1,pullup:1,pushup:1};
+var LOWER={calflp:1,bsssm:1,squatsm:1,squat:1,dead:1,rdl:1,legpress:1,hack:1,pendel:1},KHX={benchkh:1,inclkh:1,curl:1,curlbh:1,ham:1,lat:1,ohpkh:1,rdlkh:1,bss:1,concinc:1};
 function spSug(n,id){var l=lastOf(n);if(!l||S.deload.on||kindOf(id))return null;var as=asOf(n);if(!!l.as!==as)return null;var s=l.s&&l.s.length?l.s:[[l.w,l.r]];
   var top=s[0][0];s.forEach(function(q){top=as?Math.min(top,q[0]):Math.max(top,q[0]);});var rm=999;s.forEach(function(q){if(q[0]===top)rm=Math.min(rm,q[1]);});
   var rg=id&&lib(id)?(COMP[id]?[6,10]:[10,15]):[8,12];
@@ -822,7 +827,7 @@ function spSug(n,id){var l=lastOf(n);if(!l||S.deload.on||kindOf(id))return null;
   if(rm>=rg[1]){if(as&&top<=0)return {w:0,r:rm+1,t:"+1 Wdh"};var inc=as?5:KHX[id]?2:(LOWER[id]&&top>=60)?5:top<20?1:2.5,nw=as?Math.max(0,top-inc):top+inc;return {w:nw,r:rg[0],t:as?fmt(top-nw)+" kg weniger Hilfe":"+"+fmt(inc)+" kg"};}
   if(rm<rg[0])return {w:top,r:rg[0],t:"Gewicht halten"};
   return {w:top,r:rm+1,t:"+1 Wdh"};}
-var MUSX={legcurll:{beinbeuger:1},calflp:{waden:1},bsssm:{quad:1,po:.8,add:.3},legpress:{quad:1,po:.5,add:.3},squat:{quad:1,po:.7,add:.3,ur:.3},hack:{quad:1,po:.5},pendel:{quad:1,po:.5},rdl:{beinbeuger:1,po:.8,ur:.5},rdlkh:{beinbeuger:1,po:.8,ur:.5},dead:{po:1,beinbeuger:.7,ur:.8,trapez:.4,quad:.4},bss:{quad:1,po:.8,add:.3},lunge:{quad:1,po:.8,add:.3},legext:{quad:1},legcurl:{beinbeuger:1},calf:{waden:1},calfsit:{waden:1},add:{add:1},abd:{po:1},hyperb:{beinbeuger:1,po:.7},hyperr:{ur:1,po:.5},
+var MUSX={legcurll:{beinbeuger:1},calflp:{waden:1},bsssm:{quad:1,po:.8,add:.3},legpress:{quad:1,po:.5,add:.3},squat:{quad:1,po:.7,add:.3,ur:.3},squatsm:{quad:1,po:.6,add:.3},hack:{quad:1,po:.5},pendel:{quad:1,po:.5},rdl:{beinbeuger:1,po:.8,ur:.5},rdlkh:{beinbeuger:1,po:.8,ur:.5},dead:{po:1,beinbeuger:.7,ur:.8,trapez:.4,quad:.4},bss:{quad:1,po:.8,add:.3},lunge:{quad:1,po:.8,add:.3},legext:{quad:1},legcurl:{beinbeuger:1},calf:{waden:1},calfsit:{waden:1},add:{add:1},abd:{po:1},hyperb:{beinbeuger:1,po:.7},hyperr:{ur:1,po:.5},
  tbar:{lat:1,trapez:.6,hschulter:.5,bizeps:.4},tbarn:{lat:1,trapez:.5,bizeps:.4},latpull:{lat:1,bizeps:.5},latcl:{lat:1,bizeps:.6},latnt:{lat:1,bizeps:.6},latsb:{lat:1,bizeps:.5},latmc:{lat:1,bizeps:.5},kickc:{po:1,beinbeuger:.3},concinc:{bizeps:1,unterarme:.3},ezoh:{trizeps:1},cabcr:{bauch:1,seite:.3},row:{lat:1,trapez:.5,hschulter:.4,bizeps:.4,ur:.3},cabrow:{lat:1,trapez:.5,bizeps:.4},highrow:{lat:.8,trapez:.8,hschulter:.5},
  bench:{brust:1,trizeps:.5,schultern:.5},benchkh:{brust:1,trizeps:.5,schultern:.5},incl:{brust:1,schultern:.7,trizeps:.5},inclkh:{brust:1,schultern:.7,trizeps:.5},inclsm:{brust:1,schultern:.7,trizeps:.5},fly:{brust:1,schultern:.3},cfhi:{brust:1},cflo:{brust:1,schultern:.3},pushup:{brust:1,trizeps:.5,schultern:.5,bauch:.2},
  lat:{schultern:1},cablat:{schultern:1},ohp:{schultern:1,trizeps:.5,trapez:.3},ohpkh:{schultern:1,trizeps:.5},ohpsm:{schultern:1,trizeps:.5},facepull:{hschulter:1,trapez:.5},revfly:{hschulter:1,trapez:.4},
@@ -886,13 +891,17 @@ function logExtra(t){var o=[];t.ex.forEach(function(x){if(x.km)o.push(fmt(x.km)+
 function exStore(){var p=active();if(p&&!S.extra){if(!p.ex)p.ex={};return p.ex;}return S.gex;}
 function lastOf(n){var P=prof();if(!P.last)P.last={};return P.last[n]||null;}
 function prepQ(x){var l=lastOf(x.n),as=asOf(x.n),w=l?l.w:0,r=l?l.r:10;if(S.deload.on){if(S.deload.mode==="w"){if(!as)w=Math.round(w*0.8/2.5)*2.5;}else r=Math.max(3,Math.round(r*0.6));}
-  return {n:x.n,id:x.id||null,best:l&&!!l.as===as?l.best||0:0,on:true,sets:x.sets||3,w:w,r:r,lw:l?l.w:0,lr:l?l.r:10,has:!!l,ss:l&&l.s&&!S.deload.on&&!!l.as===as?l.s:null};}
+  return {n:x.n,id:x.id||findLib(x.n)||null,best:l&&!!l.as===as?l.best||0:0,on:true,sets:x.sets||3,w:w,r:r,lw:l?l.w:0,lr:l?l.r:10,has:!!l,ss:l&&l.s&&!S.deload.on&&!!l.as===as?l.s:null};}
 function wFromQ(q){var x=mkW(q.n,q.id,q.sets,q.w,q.r,q.best);x.as=asOf(q.n);if(!x.kind&&q.ss&&q.ss.length&&q.w===q.lw&&q.r===q.lr)x.sets.forEach(function(st,k){var src=q.ss[Math.min(k,q.ss.length-1)];st.w=src[0];st.r=src[1];});return x;}
 function initPrep(){var st=S.extra?{}:exStore(),seen={},src=[],ct=curType(),add=function(x){if(!seen[x.n]){seen[x.n]=1;src.push(x);}};
   if(ct.indexOf("+")>0&&st[ct])st[ct].forEach(add);
   ct.split("+").forEach(function(k){(st[k]||[]).forEach(add);});
   ct.split("+").forEach(function(k){var au={lauf:"run",rad:"bike"}[k];if(au&&!(st[k]&&st[k].length))add({n:lib(au).n,id:au,sets:1});});
   S.prep=src.map(prepQ);S.reord=false;S.pask=askLast(ct);}
+function draftKey(){return (S.extra?"x:":"p:")+curType();}
+function stashPrep(){if(!S.prep||S.prepDay!==dkey(new Date()))return;var td=dkey(new Date());if(!S.pdraft||S.pdraft.day!==td)S.pdraft={day:td,k:{}};S.pdraft.k[draftKey()]={prep:JSON.parse(JSON.stringify(S.prep)),pask:S.pask||null};}
+function restorePrep(){var td=dkey(new Date()),dr=S.pdraft&&S.pdraft.day===td&&S.pdraft.k?S.pdraft.k[draftKey()]:null;if(!dr||!dr.prep||!dr.prep.length)return false;S.prep=JSON.parse(JSON.stringify(dr.prep));S.pask=dr.pask||null;S.reord=false;return true;}
+function dropDraft(){if(S.pdraft&&S.pdraft.k)delete S.pdraft.k[draftKey()];}
 function askLast(ct){var p=active();if(!S.extra&&(!p||isT(p)))return null;var b=null;
   (prof().log||[]).forEach(function(t){if(t.typ!==ct||!t.ex||!t.ex.some(function(x){return x.s&&x.s.length}))return;if(!b||new Date(t.d)>new Date(b.d))b=t;});
   if(!b||(!S.extra&&!b.x))return null;
@@ -922,7 +931,7 @@ function scrPrep(){
   return h+'<button class="cta" data-act="start">Training starten</button><button class="cta line" data-act="home">Für später speichern</button>';
 }
 function startWorkout(){
-  S.pask=null;S.w=[];S.prep.forEach(function(q){if(!q.on)return;S.w.push(wFromQ(q));});S.wtype=curType();S.wday=(!S.extra&&isT(active()))?S.wtype:null;S.cur=null;S.reord=false;
+  dropDraft();S.pask=null;S.w=[];S.prep.forEach(function(q){if(!q.on)return;S.w.push(wFromQ(q));});S.wtype=curType();S.wday=(!S.extra&&isT(active()))?S.wtype:null;S.cur=null;S.reord=false;
   S.started=Date.now();S.open=0;S.rest=null;S.wu=null;S.pause=null;S.prs=[];S.wx=!!S.extra;S.screen="workout";
 }
 function layerWarm(){
@@ -1208,7 +1217,7 @@ function sheet(){
 
 /* ---------- Render und Takt ---------- */
 function lf(o){return Math.ceil((o.end-now())/1000);}
-var BUILD="28.11. 14:19";
+var BUILD="28.11. 14:34";
 function ptIOS(){return ((navigator.userAgent.match(/OS (\d+[_\d]*)/)||[])[1]||"").replace(/_/g,".");}
 function ptDiag(e,where){try{localStorage.setItem("protrack_diag",JSON.stringify({m:String(e&&e.message||e),st:String(e&&e.stack||"").split("\n").slice(0,6).join(" | "),w:where||"",s:S.screen+"/"+(S.sub||"")+(S.sheet?"/"+S.sheet.t:""),b:BUILD,ua:navigator.userAgent,at:new Date().toISOString()}));}catch(x){}}
 function ptDiagGet(){try{return JSON.parse(localStorage.getItem("protrack_diag")||"null");}catch(e){return null;}}
@@ -1251,7 +1260,7 @@ function act(el){
   if(d.tab){S.screen=d.tab;S.sub=null;S.sheet=null;S.toast=null;S.gh.msg="";if(d.tab==="partner")setTimeout(wake,0);}
   else if(d.sub){if(d.go)S.screen=d.go;S.sub=d.sub;S.cxout=null;S.from="mehr";S.toast=null;S.gh.msg="";S.imp=null;}
   else if(d.pickm){S.pickm=d.pickm;S.pickq="";}
-  else if(d.tday){S.extra=false;S.dayId=d.tday;S.tt=null;S.sp=!!S.set.sp;initPrep();S.prepDay=dkey(new Date());S.reord=false;S.sheet=null;S.screen="prep";S.toast=null;}
+  else if(d.tday){var same=S.prep&&S.prepDay===dkey(new Date())&&!S.extra&&S.dayId===d.tday;if(!same){stashPrep();S.extra=false;S.dayId=d.tday;S.tt=null;S.sp=!!S.set.sp;if(!restorePrep())initPrep();}S.prepDay=dkey(new Date());S.reord=false;S.sheet=null;S.screen="prep";S.toast=null;}
   else if(a==="daypick"){S.sheet={t:"daypick"};}
   else if(a==="rreset"){var rp=active();if(rp&&cf==="rreset"){var pg=prof().prog[rp.id]||(prof().prog[rp.id]={start:pstart(rp),adh:100});pg.reset=new Date().toISOString();}else S.confirm="rreset";}
   else if(d.cmode){e.cmode=d.cmode;}
@@ -1311,13 +1320,13 @@ function act(el){
   else if(el.classList.contains("cell")){}
   else if(d.meal){S.meals.push({n:d.meal,k:+d.k});}
   else if(d.tpl){var src=plan(d.tpl),np;if(src){np=JSON.parse(JSON.stringify(src));np.id="p"+(S.nextId++);np.name=src.name+" (Kopie)";np.tl=null;if(isT(np)){var ex2={};np.days.forEach(function(x){var nid="d"+(S.nextId++);ex2[nid]=(np.ex||{})[x.id]||[];x.id=nid;});np.ex=ex2;}}else if(d.tpl!=="raster")np=mkTage("p"+(S.nextId++));else np=mkPlan("p"+(S.nextId++),"Neuer Plan",COLORS[S.plans.length%COLORS.length],8,["pause"],0,null);np.isNew=true;S.sheet=null;openEdit(np);}
-  else if(d.tt){S.tt=d.tt;initPrep();}
+  else if(d.tt){if(!(S.prep&&d.tt===curType())){stashPrep();S.tt=d.tt;if(!restorePrep())initPrep();S.prepDay=dkey(new Date());}}
   else if(a==="addex"){var an=$("#addex").value.trim();if(an){var aid=findLib(an);if(S.screen==="prep")S.prep.push({n:an,id:aid,best:0,on:true,sets:3,w:0,r:10,lw:0,lr:10});else{var lo=lastOf(an);S.w.push(mkW(an,aid,3,lo?lo.w:0,lo?lo.r:10,lo?lo.best:0));S.open=S.w.length-1;}}}
   else if(a==="addset"){var ls=S.w[i].sets[S.w[i].sets.length-1]||{w:0,r:10};S.w[i].sets.push({w:ls.w,r:ls.r,done:false});}
   else if(a==="delset"){var ss=S.w[i].sets;if(ss.length>1){var li=-1;for(var q=ss.length-1;q>=0;q--)if(!ss[q].done){li=q;break;}ss.splice(li<0?ss.length-1:li,1);}}
   else if(a==="wexdel"){var wx=S.w[i],hasD=wx&&(wx.kind?wx.done:wx.sets.some(function(z){return z.done}));if(wx&&(!hasD||cf==="wx"+i)){S.w.splice(i,1);var fx2=function(v){return v==null||v<0?v:v===i?-1:v>i?v-1:v};S.open=fx2(S.open);S.cur=S.cur===i?null:fx2(S.cur);S.prs=S.prs.filter(function(z){return z!==wx.n});if(S.w.length<2)S.reord=false;}else if(wx)S.confirm="wx"+i;}
-  else if(a==="prep"||a==="extra"){var wantX=a==="extra",tdk=dkey(new Date());if(!(S.prep&&S.prepDay===tdk&&!!S.extra===wantX)){S.extra=wantX;S.tt=wantX?tkeys()[0]:null;S.sp=!!S.set.sp;initPrep();S.prepDay=tdk;}S.reord=false;S.screen="prep";S.toast=null;S.sheet=null;}
-  else if(a==="prepdrop"){if(cf==="prepdrop"){S.prep=null;S.extra=false;S.tt=null;}else S.confirm="prepdrop";}
+  else if(a==="prep"||a==="extra"){var wantX=a==="extra",tdk=dkey(new Date());if(!(S.prep&&S.prepDay===tdk&&!!S.extra===wantX)){stashPrep();S.extra=wantX;S.tt=wantX?tkeys()[0]:null;S.sp=!!S.set.sp;if(!restorePrep())initPrep();S.prepDay=tdk;}S.reord=false;S.screen="prep";S.toast=null;S.sheet=null;}
+  else if(a==="prepdrop"){if(cf==="prepdrop"){dropDraft();S.prep=null;S.extra=false;S.tt=null;}else S.confirm="prepdrop";}
   else if(a==="home"){S.screen="heute";}
   else if(a==="ptoggle"){S.prep[i].on=!S.prep[i].on;}
   else if(a==="psets"){S.prep[i].sets=Math.max(1,Math.min(8,S.prep[i].sets+ +d.d));}

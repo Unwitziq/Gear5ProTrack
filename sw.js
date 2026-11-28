@@ -1,5 +1,5 @@
 // Offline-Cache. Bei jedem Build ändert sich die Versionsnummer, dann wird der Cache erneuert.
-const CACHE="protrack-1795872060707";
+const CACHE="protrack-1795872898855";
 const FILES=["./","index.html","manifest.webmanifest","icon-180.png","icon-512.png"];
 self.addEventListener("install",e=>{e.waitUntil(caches.open(CACHE).then(c=>Promise.all(FILES.map(f=>fetch(new Request(f,{cache:"reload"})).then(r=>r.ok?c.put(f,r):null).catch(()=>{})))).catch(()=>{}).then(()=>self.skipWaiting()));});
 self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));});
